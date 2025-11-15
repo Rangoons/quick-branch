@@ -56,7 +56,7 @@ brews:
       owner: rangoons
       name: homebrew-tap
 
-    folder: Formula
+    directory: Formula
 
     homepage: "https://github.com/rangoons/quick-branch"
 
