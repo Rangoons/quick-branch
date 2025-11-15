@@ -61,17 +61,15 @@ func initializeConfig(cmd *cobra.Command) error {
 		// use config from the flag
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// search for a config file
-		home, err := os.UserHomeDir()
-		// panic if we can't get the home dir
+		// Use platform-specific config directory
+		configDir, err := os.UserConfigDir()
 		cobra.CheckErr(err)
-		// Search for config
-		viper.AddConfigPath(".")
-		viper.AddConfigPath(home + "/.quick-branch")
+
+		viper.AddConfigPath(configDir + "/quick-branch")
 		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")
 	}
-	// Read the config file
+
 	if err := viper.ReadInConfig(); err != nil {
 		var configFileNotFoundError viper.ConfigFileNotFoundError
 		if !errors.As(err, &configFileNotFoundError) {

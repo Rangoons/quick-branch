@@ -24,10 +24,8 @@ The API key will be hidden while you type or paste it.
 Example:
   linear-cli auth`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Prompt for API key
 		fmt.Print("Enter your Linear API key: ")
 
-		// Read the API key securely (hidden input)
 		apiKeyBytes, err := term.ReadPassword(int(os.Stdin.Fd()))
 		fmt.Println() // Print newline after hidden input
 
@@ -46,21 +44,12 @@ Example:
 			return fmt.Errorf("API key verification failed: %w", err)
 		}
 
-		// Save the API key
 		return writeAPIToken(apiKey)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(authCmd)
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// authCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// authCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // authorizedTransport adds the Authorization header to all requests
@@ -75,7 +64,6 @@ func (t *authorizedTransport) RoundTrip(req *http.Request) (*http.Response, erro
 }
 
 func verifyAPIKey(apiKey string) error {
-	// Create HTTP client with authorization
 	httpClient := &http.Client{
 		Transport: &authorizedTransport{
 			apiKey: apiKey,
@@ -83,17 +71,14 @@ func verifyAPIKey(apiKey string) error {
 		},
 	}
 
-	// Create GraphQL client
 	graphqlClient := graphql.NewClient("https://api.linear.app/graphql", httpClient)
 
-	// Make the request
 	ctx := context.Background()
 	response, err := generated.Me(ctx, graphqlClient)
 	if err != nil {
 		return err
 	}
 
-	// Display verification results
 	fmt.Println("✓ API key verified successfully!")
 	fmt.Printf("\nAuthenticated as:\n")
 	fmt.Printf("  Name:  %s\n", response.Viewer.Name)
@@ -105,8 +90,21 @@ func verifyAPIKey(apiKey string) error {
 func writeAPIToken(apiKey string) error {
 	viper.Set("api_key", apiKey)
 
-	// Try to write the config file
-	err := viper.SafeWriteConfig()
+	// Ensure the config directory exists
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return fmt.Errorf("failed to get config directory: %w", err)
+	}
+
+	appConfigDir := configDir + "/quick-branch"
+	if err := os.MkdirAll(appConfigDir, 0o700); err != nil {
+		return fmt.Errorf("failed to create config directory: %w", err)
+	}
+
+	configPath := appConfigDir + "/config.yaml"
+	viper.SetConfigFile(configPath)
+
+	err = viper.SafeWriteConfig()
 	if err != nil {
 		// If config doesn't exist, create it
 		err = viper.WriteConfig()
@@ -114,11 +112,6 @@ func writeAPIToken(apiKey string) error {
 			return fmt.Errorf("failed to write config: %w", err)
 		}
 	}
-	configPath := viper.ConfigFileUsed()
-	if configPath != "" {
-		fmt.Println("✓ API key saved to", configPath)
-	} else {
-		fmt.Println("✓ API key saved to config")
-	}
+	fmt.Println("✓ API key saved to", configPath)
 	return nil
 }

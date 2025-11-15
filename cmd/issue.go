@@ -89,10 +89,6 @@ var issueCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(issueCmd)
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	issueCmd.Flags().BoolVarP(&url, "url", "u", false, "Copies the issue URL to your clipboard")
 	issueCmd.Flags().BoolVarP(&branch, "branch", "b", false, "Copies the branch name to your clipboard")
 	issueCmd.Flags().BoolVarP(&checkout, "checkout", "c", false, "Creates a new branch in the cwd using the branch name from linear")
@@ -104,7 +100,6 @@ func fetchIssue(issueID string) (*generated.IssueIssue, error) {
 	if apiKey == "" {
 		return nil, fmt.Errorf("no API key found. Please run 'linear-cli auth' first")
 	}
-	// Create HTTP client with authorization
 	httpClient := &http.Client{
 		Transport: &authorizedTransport{
 			apiKey: apiKey,
@@ -112,10 +107,8 @@ func fetchIssue(issueID string) (*generated.IssueIssue, error) {
 		},
 	}
 
-	// Create GraphQL client
 	graphqlClient := graphql.NewClient("https://api.linear.app/graphql", httpClient)
 
-	// Make the request
 	ctx := context.Background()
 	response, err := generated.Issue(ctx, graphqlClient, issueID)
 	if err != nil {
