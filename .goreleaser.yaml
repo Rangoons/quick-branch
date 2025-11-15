@@ -23,11 +23,13 @@ builds:
     main: ./cmd/quick-branch/main.go
 
 archives:
-  - format: tar.gz
+  - formats:
+      - tar.gz
     # Use zip for windows archives
     format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
     files:
       - README.md
       - LICENSE*
@@ -36,7 +38,7 @@ checksum:
   name_template: "checksums.txt"
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 changelog:
   sort: asc
@@ -48,24 +50,28 @@ changelog:
       - "typo"
 
 # Homebrew setup
-brews:
+homebrew_casks:
   - name: quick-branch
-    # Create a tap repository at github.com/rangoons/homebrew-tap
-    # Or use github.com/rangoons/homebrew-quick-branch
     repository:
       owner: rangoons
       name: homebrew-tap
 
-    directory: Formula
+    # Casks directory is the default, but explicitly setting it
+    directory: Casks
 
     homepage: "https://github.com/rangoons/quick-branch"
-
     description: "Quick branch creation tool for Linear issues"
-
     license: "MIT"
 
-    install: |
-      bin.install "quick-branch"
+    # The binaries to include (defaults to cask name if not specified)
+    binaries:
+      - quick-branch
 
-    test: |
-      system "#{bin}/quick-branch", "--version"
+    # Optional: if your app/binary isn't signed and notarized, you'll need this:
+    # This removes macOS quarantine attribute from unsigned binaries
+    custom_block: |
+      postflight do
+        system_command "/usr/bin/xattr",
+          args: ["-dr", "com.apple.quarantine", "#{staged_path}"],
+          sudo: false
+      end

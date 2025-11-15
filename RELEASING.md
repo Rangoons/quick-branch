@@ -26,7 +26,7 @@ This project uses [GoReleaser](https://goreleaser.com/) to automate releases and
 2. **GitHub Actions automatically:**
    - Builds binaries for Linux, macOS, and Windows (amd64 + arm64)
    - Creates a GitHub Release with binaries attached
-   - Updates your Homebrew tap with the new formula
+   - Updates your Homebrew tap with the new cask
 
 That's it! Users can now install via:
 ```bash
@@ -61,7 +61,7 @@ Follow semantic versioning (semver):
 - [ ] Test build locally with `goreleaser release --snapshot --clean`
 - [ ] Create and push the first tag
 - [ ] Verify GitHub Release was created
-- [ ] Verify Homebrew formula was updated in tap repo
+- [ ] Verify Homebrew cask was updated in tap repo (check `Casks/` directory)
 - [ ] Test installation: `brew install rangoons/tap/quick-branch`
 
 ## Troubleshooting
@@ -77,12 +77,12 @@ If GoReleaser can't push to your Homebrew tap:
 Check the logs in GitHub Actions at:
 `https://github.com/rangoons/quick-branch/actions`
 
-### Testing Homebrew formula locally
+### Testing Homebrew cask locally
 
 ```bash
 # Install from your tap
 brew install rangoons/tap/quick-branch
 
-# Or test the formula directly
-brew install --build-from-source path/to/homebrew-tap/Formula/quick-branch.rb
+# Or test the cask directly
+brew install --cask path/to/homebrew-tap/Casks/quick-branch.rb
 ```
