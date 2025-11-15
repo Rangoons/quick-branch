@@ -113,7 +113,7 @@ quick-branch issue PRJ-456 -v
 quick-branch issue PRJ-456 -c
 
 # Output:
-# Success! Now working on brendan/prj-456-add-user-authentication
+# Success! Now working on rangoons/prj-456-add-user-authentication
 
 # 3. Later: quickly grab the issue URL for a PR description
 quick-branch issue PRJ-456 -u
