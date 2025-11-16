@@ -1,9 +1,12 @@
 # quick-branch
 
-A fast CLI tool for creating git branches from [Linear](https://linear.app) issues. No more manually formatting branch names or copying URLs—just grab your issue number and go.
+A fast CLI tool for streamlining your workflow with [Linear](https://linear.app) issues and git. Assign yourself to issues, update statuses, and create branches with proper naming—all from your terminal. Use **turbo mode** to do everything in one command.
 
 ## Features
 
+- **Turbo mode** - Assign yourself, update status to "In Dev", and checkout branch in one command
+- **Issue assignment** - Assign yourself to Linear issues from the terminal
+- **Status updates** - Update issue status directly from the CLI
 - **Quick branch creation** - Create and checkout git branches using Linear's branch naming conventions
 - **Copy to clipboard** - Instantly copy issue URLs or branch names
 - **Beautiful issue display** - View issue details with formatted markdown descriptions
@@ -40,13 +43,13 @@ Download pre-built binaries for your platform from the [releases page](https://g
 
    Enter your Linear API key when prompted. Get your API key from [Linear Settings → API](https://linear.app/settings/api).
 
-2. **Create a branch from an issue:**
+2. **Start working on an issue (the fast way):**
 
    ```bash
-   quick-branch issue ABC-123 --checkout
+   quick-branch issue ABC-123 --turbo
    ```
 
-   This creates and checks out a new branch using Linear's branch naming format.
+   This assigns you to the issue, updates the status to "In Dev", and checks out a new branch—all in one command!
 
 ## Usage
 
@@ -64,6 +67,8 @@ Your API key is stored securely in:
 - **Windows**: `%AppData%\quick-branch\config.yaml`
 
 ### Working with Issues
+
+#### View and interact with issues
 
 ```bash
 quick-branch issue <issue-id> [flags]
@@ -84,38 +89,94 @@ quick-branch issue ABC-123 --branch
 # Create and checkout a new branch
 quick-branch issue ABC-123 --checkout
 
+# Turbo mode: assign, update status, and checkout in one command
+quick-branch issue ABC-123 --turbo
+
 # Combine flags: view details and checkout
 quick-branch issue ABC-123 -v -c
 ```
 
 **Flags:**
 
+- `-t, --turbo` - Assign yourself, update status to "In Dev", and checkout branch (all-in-one!)
 - `-u, --url` - Copy issue URL to clipboard
 - `-b, --branch` - Copy branch name to clipboard
 - `-c, --checkout` - Create and checkout a new branch with the Linear branch name
 - `-v, --verbose` - Display issue description with formatted markdown
 
-## Workflow Example
+#### Start working on an issue
 
-Here's a typical workflow using `quick-branch`:
+```bash
+quick-branch start <issue-id> [flags]
+```
+
+Assign yourself to an issue with optional status update and branch checkout.
+
+**Examples:**
+
+```bash
+# Assign yourself to an issue
+quick-branch start ABC-123
+
+# Assign and update status to "In Dev"
+quick-branch start ABC-123 --status
+
+# Assign and checkout the branch
+quick-branch start ABC-123 --checkout
+
+# Assign, update status, and checkout branch
+quick-branch start ABC-123 -s -c
+```
+
+**Flags:**
+
+- `-s, --status` - Update issue status to "In Dev"
+- `-c, --checkout` - Create and checkout a new branch with the Linear branch name
+
+## Workflow Examples
+
+### The Fast Way (Turbo Mode)
+
+Start working on an issue instantly:
+
+```bash
+# Get started with everything in one command
+quick-branch issue PRJ-456 --turbo
+
+# Output:
+# Success! Assigned John Doe to PRJ-456
+# Success! Updated PRJ-456 to In Dev
+# Success! Now working on rangoons/prj-456-add-user-authentication
+```
+
+### The Traditional Way
+
+Break down each step for more control:
 
 ```bash
 # 1. See what you're working on
 quick-branch issue PRJ-456 -v
 
 # Output:
-# Add user authentication: In Progress
+# Add user authentication: Backlog
 #
 # ## Description
 # Implement OAuth2 authentication with support for GitHub and Google...
 
-# 2. Create a branch and start working
+# 2. Assign yourself and update status
+quick-branch start PRJ-456 --status
+
+# Output:
+# Success! Assigned John Doe to PRJ-456
+# Success! Updated PRJ-456 to In Dev
+
+# 3. Create a branch and start working
 quick-branch issue PRJ-456 -c
 
 # Output:
 # Success! Now working on rangoons/prj-456-add-user-authentication
 
-# 3. Later: quickly grab the issue URL for a PR description
+# 4. Later: quickly grab the issue URL for a PR description
 quick-branch issue PRJ-456 -u
 
 # Output:
