@@ -20,3 +20,29 @@ query Issue($id: String!) {
     }
   }
 }
+
+query TeamStates($issueId: String!) {
+  issue(id: $issueId) {
+    team {
+      states {
+        nodes {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation IssueUpdate($issueUpdateId: String!, $input: IssueUpdateInput!) {
+  issueUpdate(id: $issueUpdateId, input: $input) {
+    success
+    issue {
+      id
+      title
+      state {
+        name
+      }
+    }
+  }
+}

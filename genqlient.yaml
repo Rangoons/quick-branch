@@ -3,3 +3,11 @@ operations:
   - queries.graphql
 generated: internal/generated/graphql.go
 package: generated
+optional: pointer_omitempty
+bindings:
+  DateTime:
+    type: time.Time
+  JSON:
+    type: map[string]interface{}
+  TimelessDate:
+    type: string

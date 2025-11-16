@@ -13,13 +13,15 @@ var (
 	cfgFile string
 	rootCmd = &cobra.Command{
 		Use:   "quick-branch",
-		Short: "A brief description of your application",
-		Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+		Short: "A fast CLI for working with Linear issues and git branches",
+		Long: `quick-branch streamlines your workflow with Linear and git.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Quickly fetch issue details, assign yourself to issues, update statuses,
+and create git branches with Linear's suggested branch names - all from
+your terminal.
+
+Use the --turbo flag for maximum speed: assign yourself, update status
+to "In Dev", and checkout the branch in one command.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return initializeConfig(cmd)
 		},

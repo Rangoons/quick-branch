@@ -20,6 +20,7 @@ var (
 	branch      bool
 	checkout    bool
 	description bool
+	turbo       bool
 )
 
 // issueCmd represents the issue command
@@ -38,6 +39,24 @@ var issueCmd = &cobra.Command{
 			fmt.Printf("Error: %v", err)
 			return
 		}
+		if turbo {
+			// Assign the issue
+			if err := assignMe(issueID); err != nil {
+				fmt.Printf("Error assigning issue: %v\n", err)
+				return
+			}
+			// Update status to "In Dev"
+			if err := updateIssueStatus(issueID); err != nil {
+				fmt.Printf("Error updating status: %v\n", err)
+				return
+			}
+			// Checkout the branch
+			if err := checkoutBranch(issue.BranchName); err != nil {
+				fmt.Printf("Error checking out branch: %v\n", err)
+				return
+			}
+			return
+		}
 		if description {
 			// Style the title (bold)
 			titleStyle := lipgloss.NewStyle().Bold(true)
@@ -54,7 +73,7 @@ var issueCmd = &cobra.Command{
 				glamour.WithAutoStyle(),
 			)
 			if err == nil {
-				out, err := renderer.Render(issue.Description)
+				out, err := renderer.Render(*issue.Description)
 				if err == nil {
 					fmt.Print(out)
 				} else {
@@ -78,11 +97,9 @@ var issueCmd = &cobra.Command{
 			}
 		}
 		if checkout {
-			err := exec.Command("git", "switch", "-c", issue.BranchName).Run()
-			if err != nil {
-				fmt.Printf("Erro: %v", err)
+			if err := checkoutBranch(issue.BranchName); err != nil {
+				fmt.Printf("Error: %v\n", err)
 			}
-			fmt.Printf("Success! Now working on %v", issue.BranchName)
 		}
 	},
 }
@@ -93,12 +110,13 @@ func init() {
 	issueCmd.Flags().BoolVarP(&branch, "branch", "b", false, "Copies the branch name to your clipboard")
 	issueCmd.Flags().BoolVarP(&checkout, "checkout", "c", false, "Creates a new branch in the cwd using the branch name from linear")
 	issueCmd.Flags().BoolVarP(&description, "verbose", "v", false, "Prints the issue description")
+	issueCmd.Flags().BoolVarP(&turbo, "turbo", "t", false, "Assigns you to the issue, updates status to 'In Dev', and checks out the branch")
 }
 
 func fetchIssue(issueID string) (*generated.IssueIssue, error) {
 	apiKey := viper.GetString("api_key")
 	if apiKey == "" {
-		return nil, fmt.Errorf("no API key found. Please run 'linear-cli auth' first")
+		return nil, fmt.Errorf("no API key found. Please run 'quick-branch auth' first")
 	}
 	httpClient := &http.Client{
 		Transport: &authorizedTransport{
@@ -116,4 +134,13 @@ func fetchIssue(issueID string) (*generated.IssueIssue, error) {
 	}
 
 	return &response.Issue, nil
+}
+
+func checkoutBranch(branchName string) error {
+	err := exec.Command("git", "switch", "-c", branchName).Run()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Success! Now working on %v\n", branchName)
+	return nil
 }

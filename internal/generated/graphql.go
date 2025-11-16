@@ -4,6 +4,7 @@ package generated
 
 import (
 	"context"
+	"time"
 
 	"github.com/Khan/genqlient/graphql"
 )
@@ -24,7 +25,7 @@ type IssueIssue struct {
 	// Suggested branch name for the issue.
 	BranchName string `json:"branchName"`
 	// The issue's description in markdown format.
-	Description string `json:"description"`
+	Description *string `json:"description"`
 	// The workflow state that the issue is associated with.
 	State IssueIssueStateWorkflowState `json:"state"`
 }
@@ -45,7 +46,7 @@ func (v *IssueIssue) GetUrl() string { return v.Url }
 func (v *IssueIssue) GetBranchName() string { return v.BranchName }
 
 // GetDescription returns IssueIssue.Description, and is useful for accessing the field via an interface.
-func (v *IssueIssue) GetDescription() string { return v.Description }
+func (v *IssueIssue) GetDescription() *string { return v.Description }
 
 // GetState returns IssueIssue.State, and is useful for accessing the field via an interface.
 func (v *IssueIssue) GetState() IssueIssueStateWorkflowState { return v.State }
@@ -75,6 +76,217 @@ type IssueResponse struct {
 
 // GetIssue returns IssueResponse.Issue, and is useful for accessing the field via an interface.
 func (v *IssueResponse) GetIssue() IssueIssue { return v.Issue }
+
+type IssueUpdateInput struct {
+	// The identifiers of the issue labels to be added to this issue.
+	AddedLabelIds []string `json:"addedLabelIds,omitempty"`
+	// The identifier of the user to assign the issue to.
+	AssigneeId *string `json:"assigneeId,omitempty"`
+	// Whether the issue was automatically closed because its parent issue was closed.
+	AutoClosedByParentClosing *bool `json:"autoClosedByParentClosing,omitempty"`
+	// The cycle associated with the issue.
+	CycleId *string `json:"cycleId,omitempty"`
+	// The identifier of the agent user to delegate the issue to.
+	DelegateId *string `json:"delegateId,omitempty"`
+	// The issue description in markdown format.
+	Description *string `json:"description,omitempty"`
+	// [Internal] The issue description as a Prosemirror document.
+	DescriptionData *map[string]interface{} `json:"descriptionData,omitempty"`
+	// The date at which the issue is due.
+	DueDate *string `json:"dueDate,omitempty"`
+	// The estimated complexity of the issue.
+	Estimate *int `json:"estimate,omitempty"`
+	// The identifiers of the issue labels associated with this ticket.
+	LabelIds []string `json:"labelIds,omitempty"`
+	// The ID of the last template applied to the issue.
+	LastAppliedTemplateId *string `json:"lastAppliedTemplateId,omitempty"`
+	// The identifier of the parent issue.
+	ParentId *string `json:"parentId,omitempty"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority *int `json:"priority,omitempty"`
+	// The position of the issue related to other issues, when ordered by priority.
+	PrioritySortOrder *float64 `json:"prioritySortOrder,omitempty"`
+	// The project associated with the issue.
+	ProjectId *string `json:"projectId,omitempty"`
+	// The project milestone associated with the issue.
+	ProjectMilestoneId *string `json:"projectMilestoneId,omitempty"`
+	// The identifiers of the issue labels to be removed from this issue.
+	RemovedLabelIds []string `json:"removedLabelIds,omitempty"`
+	// [Internal] The timestamp at which an issue will be considered in breach of SLA.
+	SlaBreachesAt *time.Time `json:"slaBreachesAt,omitempty"`
+	// [Internal] The timestamp at which the issue's SLA was started.
+	SlaStartedAt *time.Time `json:"slaStartedAt,omitempty"`
+	// The SLA day count type for the issue. Whether SLA should be business days only or calendar days (default).
+	SlaType *SLADayCountType `json:"slaType,omitempty"`
+	// The identifier of the user who snoozed the issue.
+	SnoozedById *string `json:"snoozedById,omitempty"`
+	// The time until an issue will be snoozed in Triage view.
+	SnoozedUntilAt *time.Time `json:"snoozedUntilAt,omitempty"`
+	// The position of the issue related to other issues.
+	SortOrder *float64 `json:"sortOrder,omitempty"`
+	// The team state of the issue.
+	StateId *string `json:"stateId,omitempty"`
+	// The position of the issue in parent's sub-issue list.
+	SubIssueSortOrder *float64 `json:"subIssueSortOrder,omitempty"`
+	// The identifiers of the users subscribing to this ticket.
+	SubscriberIds []string `json:"subscriberIds,omitempty"`
+	// The identifier of the team associated with the issue.
+	TeamId *string `json:"teamId,omitempty"`
+	// The issue title.
+	Title *string `json:"title,omitempty"`
+	// Whether the issue has been trashed.
+	Trashed *bool `json:"trashed,omitempty"`
+}
+
+// GetAddedLabelIds returns IssueUpdateInput.AddedLabelIds, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetAddedLabelIds() []string { return v.AddedLabelIds }
+
+// GetAssigneeId returns IssueUpdateInput.AssigneeId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetAssigneeId() *string { return v.AssigneeId }
+
+// GetAutoClosedByParentClosing returns IssueUpdateInput.AutoClosedByParentClosing, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetAutoClosedByParentClosing() *bool { return v.AutoClosedByParentClosing }
+
+// GetCycleId returns IssueUpdateInput.CycleId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetCycleId() *string { return v.CycleId }
+
+// GetDelegateId returns IssueUpdateInput.DelegateId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetDelegateId() *string { return v.DelegateId }
+
+// GetDescription returns IssueUpdateInput.Description, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetDescription() *string { return v.Description }
+
+// GetDescriptionData returns IssueUpdateInput.DescriptionData, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetDescriptionData() *map[string]interface{} { return v.DescriptionData }
+
+// GetDueDate returns IssueUpdateInput.DueDate, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetDueDate() *string { return v.DueDate }
+
+// GetEstimate returns IssueUpdateInput.Estimate, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetEstimate() *int { return v.Estimate }
+
+// GetLabelIds returns IssueUpdateInput.LabelIds, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetLabelIds() []string { return v.LabelIds }
+
+// GetLastAppliedTemplateId returns IssueUpdateInput.LastAppliedTemplateId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetLastAppliedTemplateId() *string { return v.LastAppliedTemplateId }
+
+// GetParentId returns IssueUpdateInput.ParentId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetParentId() *string { return v.ParentId }
+
+// GetPriority returns IssueUpdateInput.Priority, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetPriority() *int { return v.Priority }
+
+// GetPrioritySortOrder returns IssueUpdateInput.PrioritySortOrder, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetPrioritySortOrder() *float64 { return v.PrioritySortOrder }
+
+// GetProjectId returns IssueUpdateInput.ProjectId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetProjectId() *string { return v.ProjectId }
+
+// GetProjectMilestoneId returns IssueUpdateInput.ProjectMilestoneId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetProjectMilestoneId() *string { return v.ProjectMilestoneId }
+
+// GetRemovedLabelIds returns IssueUpdateInput.RemovedLabelIds, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetRemovedLabelIds() []string { return v.RemovedLabelIds }
+
+// GetSlaBreachesAt returns IssueUpdateInput.SlaBreachesAt, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSlaBreachesAt() *time.Time { return v.SlaBreachesAt }
+
+// GetSlaStartedAt returns IssueUpdateInput.SlaStartedAt, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSlaStartedAt() *time.Time { return v.SlaStartedAt }
+
+// GetSlaType returns IssueUpdateInput.SlaType, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSlaType() *SLADayCountType { return v.SlaType }
+
+// GetSnoozedById returns IssueUpdateInput.SnoozedById, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSnoozedById() *string { return v.SnoozedById }
+
+// GetSnoozedUntilAt returns IssueUpdateInput.SnoozedUntilAt, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSnoozedUntilAt() *time.Time { return v.SnoozedUntilAt }
+
+// GetSortOrder returns IssueUpdateInput.SortOrder, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSortOrder() *float64 { return v.SortOrder }
+
+// GetStateId returns IssueUpdateInput.StateId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetStateId() *string { return v.StateId }
+
+// GetSubIssueSortOrder returns IssueUpdateInput.SubIssueSortOrder, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSubIssueSortOrder() *float64 { return v.SubIssueSortOrder }
+
+// GetSubscriberIds returns IssueUpdateInput.SubscriberIds, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetSubscriberIds() []string { return v.SubscriberIds }
+
+// GetTeamId returns IssueUpdateInput.TeamId, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetTeamId() *string { return v.TeamId }
+
+// GetTitle returns IssueUpdateInput.Title, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetTitle() *string { return v.Title }
+
+// GetTrashed returns IssueUpdateInput.Trashed, and is useful for accessing the field via an interface.
+func (v *IssueUpdateInput) GetTrashed() *bool { return v.Trashed }
+
+// IssueUpdateIssueUpdateIssuePayload includes the requested fields of the GraphQL type IssuePayload.
+type IssueUpdateIssueUpdateIssuePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The issue that was created or updated.
+	Issue *IssueUpdateIssueUpdateIssuePayloadIssue `json:"issue"`
+}
+
+// GetSuccess returns IssueUpdateIssueUpdateIssuePayload.Success, and is useful for accessing the field via an interface.
+func (v *IssueUpdateIssueUpdateIssuePayload) GetSuccess() bool { return v.Success }
+
+// GetIssue returns IssueUpdateIssueUpdateIssuePayload.Issue, and is useful for accessing the field via an interface.
+func (v *IssueUpdateIssueUpdateIssuePayload) GetIssue() *IssueUpdateIssueUpdateIssuePayloadIssue {
+	return v.Issue
+}
+
+// IssueUpdateIssueUpdateIssuePayloadIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type IssueUpdateIssueUpdateIssuePayloadIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The issue's title.
+	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State IssueUpdateIssueUpdateIssuePayloadIssueStateWorkflowState `json:"state"`
+}
+
+// GetId returns IssueUpdateIssueUpdateIssuePayloadIssue.Id, and is useful for accessing the field via an interface.
+func (v *IssueUpdateIssueUpdateIssuePayloadIssue) GetId() string { return v.Id }
+
+// GetTitle returns IssueUpdateIssueUpdateIssuePayloadIssue.Title, and is useful for accessing the field via an interface.
+func (v *IssueUpdateIssueUpdateIssuePayloadIssue) GetTitle() string { return v.Title }
+
+// GetState returns IssueUpdateIssueUpdateIssuePayloadIssue.State, and is useful for accessing the field via an interface.
+func (v *IssueUpdateIssueUpdateIssuePayloadIssue) GetState() IssueUpdateIssueUpdateIssuePayloadIssueStateWorkflowState {
+	return v.State
+}
+
+// IssueUpdateIssueUpdateIssuePayloadIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type IssueUpdateIssueUpdateIssuePayloadIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+}
+
+// GetName returns IssueUpdateIssueUpdateIssuePayloadIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *IssueUpdateIssueUpdateIssuePayloadIssueStateWorkflowState) GetName() string { return v.Name }
+
+// IssueUpdateResponse is returned by IssueUpdate on success.
+type IssueUpdateResponse struct {
+	// Updates an issue.
+	IssueUpdate IssueUpdateIssueUpdateIssuePayload `json:"issueUpdate"`
+}
+
+// GetIssueUpdate returns IssueUpdateResponse.IssueUpdate, and is useful for accessing the field via an interface.
+func (v *IssueUpdateResponse) GetIssueUpdate() IssueUpdateIssueUpdateIssuePayload {
+	return v.IssueUpdate
+}
 
 // MeResponse is returned by Me on success.
 type MeResponse struct {
@@ -107,6 +319,84 @@ func (v *MeViewerUser) GetName() string { return v.Name }
 // GetEmail returns MeViewerUser.Email, and is useful for accessing the field via an interface.
 func (v *MeViewerUser) GetEmail() string { return v.Email }
 
+type SLADayCountType string
+
+const (
+	SLADayCountTypeAll              SLADayCountType = "all"
+	SLADayCountTypeOnlybusinessdays SLADayCountType = "onlyBusinessDays"
+)
+
+var AllSLADayCountType = []SLADayCountType{
+	SLADayCountTypeAll,
+	SLADayCountTypeOnlybusinessdays,
+}
+
+// TeamStatesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type TeamStatesIssue struct {
+	// The team that the issue is associated with.
+	Team TeamStatesIssueTeam `json:"team"`
+}
+
+// GetTeam returns TeamStatesIssue.Team, and is useful for accessing the field via an interface.
+func (v *TeamStatesIssue) GetTeam() TeamStatesIssueTeam { return v.Team }
+
+// TeamStatesIssueTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// An organizational unit that contains issues.
+type TeamStatesIssueTeam struct {
+	// The states that define the workflow associated with the team.
+	States TeamStatesIssueTeamStatesWorkflowStateConnection `json:"states"`
+}
+
+// GetStates returns TeamStatesIssueTeam.States, and is useful for accessing the field via an interface.
+func (v *TeamStatesIssueTeam) GetStates() TeamStatesIssueTeamStatesWorkflowStateConnection {
+	return v.States
+}
+
+// TeamStatesIssueTeamStatesWorkflowStateConnection includes the requested fields of the GraphQL type WorkflowStateConnection.
+type TeamStatesIssueTeamStatesWorkflowStateConnection struct {
+	Nodes []TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState `json:"nodes,omitempty"`
+}
+
+// GetNodes returns TeamStatesIssueTeamStatesWorkflowStateConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *TeamStatesIssueTeamStatesWorkflowStateConnection) GetNodes() []TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState {
+	return v.Nodes
+}
+
+// TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The state's name.
+	Name string `json:"name"`
+}
+
+// GetId returns TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState.Id, and is useful for accessing the field via an interface.
+func (v *TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState) GetId() string {
+	return v.Id
+}
+
+// GetName returns TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *TeamStatesIssueTeamStatesWorkflowStateConnectionNodesWorkflowState) GetName() string {
+	return v.Name
+}
+
+// TeamStatesResponse is returned by TeamStates on success.
+type TeamStatesResponse struct {
+	// One specific issue.
+	Issue TeamStatesIssue `json:"issue"`
+}
+
+// GetIssue returns TeamStatesResponse.Issue, and is useful for accessing the field via an interface.
+func (v *TeamStatesResponse) GetIssue() TeamStatesIssue { return v.Issue }
+
 // __IssueInput is used internally by genqlient
 type __IssueInput struct {
 	Id string `json:"id"`
@@ -114,6 +404,26 @@ type __IssueInput struct {
 
 // GetId returns __IssueInput.Id, and is useful for accessing the field via an interface.
 func (v *__IssueInput) GetId() string { return v.Id }
+
+// __IssueUpdateInput is used internally by genqlient
+type __IssueUpdateInput struct {
+	IssueUpdateId string           `json:"issueUpdateId"`
+	Input         IssueUpdateInput `json:"input"`
+}
+
+// GetIssueUpdateId returns __IssueUpdateInput.IssueUpdateId, and is useful for accessing the field via an interface.
+func (v *__IssueUpdateInput) GetIssueUpdateId() string { return v.IssueUpdateId }
+
+// GetInput returns __IssueUpdateInput.Input, and is useful for accessing the field via an interface.
+func (v *__IssueUpdateInput) GetInput() IssueUpdateInput { return v.Input }
+
+// __TeamStatesInput is used internally by genqlient
+type __TeamStatesInput struct {
+	IssueId string `json:"issueId"`
+}
+
+// GetIssueId returns __TeamStatesInput.IssueId, and is useful for accessing the field via an interface.
+func (v *__TeamStatesInput) GetIssueId() string { return v.IssueId }
 
 // The query executed by Issue.
 const Issue_Operation = `
@@ -158,6 +468,49 @@ func Issue(
 	return data_, err_
 }
 
+// The mutation executed by IssueUpdate.
+const IssueUpdate_Operation = `
+mutation IssueUpdate ($issueUpdateId: String!, $input: IssueUpdateInput!) {
+	issueUpdate(id: $issueUpdateId, input: $input) {
+		success
+		issue {
+			id
+			title
+			state {
+				name
+			}
+		}
+	}
+}
+`
+
+func IssueUpdate(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	issueUpdateId string,
+	input IssueUpdateInput,
+) (data_ *IssueUpdateResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "IssueUpdate",
+		Query:  IssueUpdate_Operation,
+		Variables: &__IssueUpdateInput{
+			IssueUpdateId: issueUpdateId,
+			Input:         input,
+		},
+	}
+
+	data_ = &IssueUpdateResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
 // The query executed by Me.
 const Me_Operation = `
 query Me {
@@ -179,6 +532,47 @@ func Me(
 	}
 
 	data_ = &MeResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by TeamStates.
+const TeamStates_Operation = `
+query TeamStates ($issueId: String!) {
+	issue(id: $issueId) {
+		team {
+			states {
+				nodes {
+					id
+					name
+				}
+			}
+		}
+	}
+}
+`
+
+func TeamStates(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	issueId string,
+) (data_ *TeamStatesResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "TeamStates",
+		Query:  TeamStates_Operation,
+		Variables: &__TeamStatesInput{
+			IssueId: issueId,
+		},
+	}
+
+	data_ = &TeamStatesResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
