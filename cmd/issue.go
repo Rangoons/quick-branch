@@ -20,7 +20,6 @@ var (
 	branch      bool
 	checkout    bool
 	description bool
-	turbo       bool
 )
 
 // issueCmd represents the issue command
@@ -37,24 +36,6 @@ var issueCmd = &cobra.Command{
 		issue, err := fetchIssue(issueID)
 		if err != nil {
 			fmt.Printf("Error: %v", err)
-			return
-		}
-		if turbo {
-			// Assign the issue
-			if err := assignMe(issueID); err != nil {
-				fmt.Printf("Error assigning issue: %v\n", err)
-				return
-			}
-			// Update status to "In Dev"
-			if err := updateIssueStatus(issueID); err != nil {
-				fmt.Printf("Error updating status: %v\n", err)
-				return
-			}
-			// Checkout the branch
-			if err := checkoutBranch(issue.BranchName); err != nil {
-				fmt.Printf("Error checking out branch: %v\n", err)
-				return
-			}
 			return
 		}
 		if description {
@@ -110,7 +91,6 @@ func init() {
 	issueCmd.Flags().BoolVarP(&branch, "branch", "b", false, "Copies the branch name to your clipboard")
 	issueCmd.Flags().BoolVarP(&checkout, "checkout", "c", false, "Creates a new branch in the cwd using the branch name from linear")
 	issueCmd.Flags().BoolVarP(&description, "verbose", "v", false, "Prints the issue description")
-	issueCmd.Flags().BoolVarP(&turbo, "turbo", "t", false, "Assigns you to the issue, updates status to 'In Dev', and checks out the branch")
 }
 
 func fetchIssue(issueID string) (*generated.IssueIssue, error) {

@@ -20,8 +20,8 @@ Quickly fetch issue details, assign yourself to issues, update statuses,
 and create git branches with Linear's suggested branch names - all from
 your terminal.
 
-Use the --turbo flag for maximum speed: assign yourself, update status
-to "In Dev", and checkout the branch in one command.`,
+Use 'quick-branch start <issue> --turbo' for maximum speed: assign yourself,
+update status to "In Dev", and checkout the branch in one command.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return initializeConfig(cmd)
 		},

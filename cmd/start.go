@@ -17,6 +17,7 @@ import (
 var (
 	status       bool
 	checkoutFlag bool
+	turbo        bool
 )
 
 // startCmd represents the start command
@@ -27,14 +28,23 @@ var startCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		issueID := args[0]
+
+		// Turbo mode enables both status and checkout
+		if turbo {
+			status = true
+			checkoutFlag = true
+		}
+
 		err := assignMe(issueID)
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
 		if status {
 			err := updateIssueStatus(issueID)
 			if err != nil {
 				fmt.Println(err)
+				return
 			}
 		}
 		if checkoutFlag {
@@ -53,6 +63,7 @@ var startCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(startCmd)
 
+	startCmd.Flags().BoolVarP(&turbo, "turbo", "t", false, "Assigns you to the issue, updates status to 'In Dev', and checks out the branch (all-in-one!)")
 	startCmd.Flags().BoolVarP(&status, "status", "s", false, "Updates the status of the issue to 'In Dev'")
 	startCmd.Flags().BoolVarP(&checkoutFlag, "checkout", "c", false, "Creates a new branch in the cwd using the branch name from linear")
 	// Here you will define your flags and configuration settings.

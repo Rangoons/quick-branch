@@ -46,7 +46,7 @@ Download pre-built binaries for your platform from the [releases page](https://g
 2. **Start working on an issue (the fast way):**
 
    ```bash
-   quick-branch issue ABC-123 --turbo
+   quick-branch start ABC-123 --turbo
    ```
 
    This assigns you to the issue, updates the status to "In Dev", and checks out a new branch—all in one command!
@@ -89,16 +89,12 @@ quick-branch issue ABC-123 --branch
 # Create and checkout a new branch
 quick-branch issue ABC-123 --checkout
 
-# Turbo mode: assign, update status, and checkout in one command
-quick-branch issue ABC-123 --turbo
-
 # Combine flags: view details and checkout
 quick-branch issue ABC-123 -v -c
 ```
 
 **Flags:**
 
-- `-t, --turbo` - Assign yourself, update status to "In Dev", and checkout branch (all-in-one!)
 - `-u, --url` - Copy issue URL to clipboard
 - `-b, --branch` - Copy branch name to clipboard
 - `-c, --checkout` - Create and checkout a new branch with the Linear branch name
@@ -115,6 +111,9 @@ Assign yourself to an issue with optional status update and branch checkout.
 **Examples:**
 
 ```bash
+# Turbo mode: do everything in one command
+quick-branch start ABC-123 --turbo
+
 # Assign yourself to an issue
 quick-branch start ABC-123
 
@@ -130,6 +129,7 @@ quick-branch start ABC-123 -s -c
 
 **Flags:**
 
+- `-t, --turbo` - Assign yourself, update status to "In Dev", and checkout branch (all-in-one!)
 - `-s, --status` - Update issue status to "In Dev"
 - `-c, --checkout` - Create and checkout a new branch with the Linear branch name
 
@@ -141,7 +141,7 @@ Start working on an issue instantly:
 
 ```bash
 # Get started with everything in one command
-quick-branch issue PRJ-456 --turbo
+quick-branch start PRJ-456 --turbo
 
 # Output:
 # Success! Assigned John Doe to PRJ-456
