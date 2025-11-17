@@ -63,8 +63,8 @@ var startCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(startCmd)
 
-	startCmd.Flags().BoolVarP(&turbo, "turbo", "t", false, "Assigns you to the issue, updates status to 'In Dev', and checks out the branch (all-in-one!)")
-	startCmd.Flags().BoolVarP(&status, "status", "s", false, "Updates the status of the issue to 'In Dev'")
+	startCmd.Flags().BoolVarP(&turbo, "turbo", "t", false, "Assigns you to the issue, updates status to 'In Progress', and checks out the branch (all-in-one!)")
+	startCmd.Flags().BoolVarP(&status, "status", "s", false, "Updates the status of the issue to 'In Progress'")
 	startCmd.Flags().BoolVarP(&checkoutFlag, "checkout", "c", false, "Creates a new branch in the cwd using the branch name from linear")
 	// Here you will define your flags and configuration settings.
 
@@ -124,14 +124,14 @@ func updateIssueStatus(issueID string) error {
 	if err != nil {
 		return err
 	}
-	var inDev string
+	var inProgress string
 	for _, s := range response.Issue.Team.States.Nodes {
-		if s.Name == "In Dev" {
-			inDev = s.Id
+		if s.Name == "In Progress" {
+			inProgress = s.Id
 		}
 	}
 
-	input := generated.IssueUpdateInput{StateId: &inDev}
+	input := generated.IssueUpdateInput{StateId: &inProgress}
 	mutation, err := generated.IssueUpdate(ctx, graphqlClient, issueID, input)
 	if err != nil {
 		return err

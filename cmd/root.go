@@ -21,7 +21,7 @@ and create git branches with Linear's suggested branch names - all from
 your terminal.
 
 Use 'quick-branch start <issue> --turbo' for maximum speed: assign yourself,
-update status to "In Dev", and checkout the branch in one command.`,
+update status to "In Progress", and checkout the branch in one command.`,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return initializeConfig(cmd)
 		},
