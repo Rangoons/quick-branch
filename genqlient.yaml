@@ -7,7 +7,15 @@ optional: pointer_omitempty
 bindings:
   DateTime:
     type: time.Time
+  DateTimeOrDuration:
+    type: string
+  Duration:
+    type: string
+  TimelessDateOrDuration:
+    type: string
   JSON:
+    type: map[string]interface{}
+  JSONObject:
     type: map[string]interface{}
   TimelessDate:
     type: string

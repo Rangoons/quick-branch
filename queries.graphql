@@ -46,3 +46,48 @@ mutation IssueUpdate($issueUpdateId: String!, $input: IssueUpdateInput!) {
     }
   }
 }
+
+query ViewerTeams {
+  viewer {
+    teams {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+}
+
+query TeamStatesById($teamId: String!) {
+  team(id: $teamId) {
+    states {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+}
+
+query FilteredIssues($filter: IssueFilter) {
+  issues(filter: $filter) {
+    nodes {
+      id
+      priority
+      title
+      identifier
+      state {
+        id
+        name
+      }
+      assignee {
+        statusLabel
+        updatedAt
+      }
+      team {
+        name
+        id
+      }
+    }
+  }
+}
