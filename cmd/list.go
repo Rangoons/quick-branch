@@ -18,6 +18,7 @@ import (
 	"github.com/rangoons/quick-branch/internal/generated"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/term"
 )
 
 var listCmd = &cobra.Command{
@@ -37,31 +38,99 @@ var listCmd = &cobra.Command{
 			fmt.Println("No issues found.")
 			return nil
 		}
+		termWidth, _, err := term.GetSize(int(os.Stdout.Fd()))
+		if err != nil || termWidth == 0 {
+			termWidth = 100
+		}
+
+		// Width(n) in lipgloss sets the content area only — padding is added on top.
+		// All cells use Padding(0, 1), so each column's rendered width = contentW + 2.
+		// Total = (p+2) + (t+2) + (title+2) + (s+2) + 5 borders = p+t+title+s+13
+		const (
+			priorityW = 6  // block chars (▄▆█) render as 2 cols each in most terminals
+			ticketW   = 12 // len("SWEAT-1009")=10, +2 so word-wrap at hyphen can't trigger
+			stateW    = 13 // len("In Progress")=11, +2 buffer
+			fixedW    = (priorityW + 2) + (ticketW + 2) + (stateW + 2) + 5
+		)
+
+		// Truncate titles so the table never exceeds the terminal width.
+		// We do NOT pin the title column width in StyleFunc — pinning causes
+		// lipgloss to word-wrap content that's even 1 display-column over the
+		// limit (common with East-Asian-width ambiguous chars like curly quotes).
+		// Without a pinned width, lipgloss renders title cells at natural content
+		// width with no wrapping; the column auto-sizes to the widest cell.
+		titleMaxW := termWidth - fixedW - 2
+		if titleMaxW < 10 {
+			titleMaxW = 10
+		}
+
+		rowCount := len(resp.Issues.Nodes)
+
 		var (
 			header = lipgloss.Color("#957FB8")
 			border = lipgloss.Color("#54546D")
 			text   = lipgloss.Color("#DCD7BA")
 
-			headerStyle = lipgloss.NewStyle().Foreground(header).Bold(true).Align(lipgloss.Center)
-			cellStyle   = lipgloss.NewStyle().Padding(0, 1)
-			oddRowStyle = cellStyle.Foreground(text)
+			headerStyle = lipgloss.NewStyle().Padding(0, 1).Foreground(header).Bold(true).Align(lipgloss.Center)
+			cellStyle   = lipgloss.NewStyle().Padding(0, 1).PaddingBottom(1).Foreground(text)
+			lastRow     = cellStyle.PaddingBottom(0).Foreground(text)
 		)
-		t := table.New().Border(lipgloss.NormalBorder()).BorderStyle(lipgloss.NewStyle().Foreground(border)).StyleFunc(func(row, col int) lipgloss.Style {
-			switch {
-			case row == table.HeaderRow:
-				return headerStyle
-			default:
-				return oddRowStyle
-			}
-		}).Headers("PRIORITY", "TICKET", "TITLE", "STATE")
+
+		t := table.New().
+			Border(lipgloss.NormalBorder()).
+			BorderStyle(lipgloss.NewStyle().Foreground(border)).
+			StyleFunc(func(row, col int) lipgloss.Style {
+				var base lipgloss.Style
+				switch {
+				case row == table.HeaderRow:
+					base = headerStyle
+				case row == rowCount-1:
+					base = lastRow
+				default:
+					base = cellStyle
+				}
+				// Pin fixed columns; leave title (col 2) unpinned so it
+				// auto-sizes to content without word-wrapping.
+				switch col {
+				case 0:
+					return base.Width(priorityW)
+				case 1:
+					return base.Width(ticketW)
+				case 3:
+					return base.Width(stateW)
+				}
+				return base
+			}).
+			Headers("◌", "ID", "TITLE", "STATE")
 
 		for _, issue := range resp.Issues.Nodes {
-			t.Row(strconv.FormatFloat(issue.Priority, 'f', 0, 64), issue.Identifier, issue.Title, issue.State.Name)
-			// fmt.Printf("(%g) [%s] %s  [%s]\n", issue.Priority, issue.Identifier, issue.Title, issue.State.Name)
+			t.Row(
+				getPriorityDisplay(issue.Priority),
+				issue.Identifier,
+				truncate(issue.Title, titleMaxW),
+				issue.State.Name,
+			)
 		}
 		fmt.Println(t)
 		return nil
 	},
+}
+
+func getPriorityDisplay(priority float64) string {
+	switch priority {
+	case 0:
+		return "---"
+	case 1:
+		return "⚠⚠⚠"
+	case 2:
+		return "▄▆█"
+	case 3:
+		return "▄▆ "
+	case 4:
+		return "▄  "
+	default:
+		return strconv.FormatFloat(priority, 'f', 0, 64)
+	}
 }
 
 var listSetupCmd = &cobra.Command{
@@ -230,6 +299,20 @@ func buildIssueFilter(teamID string, stateIDs []string, assigneeFilter string) *
 	}
 
 	return filter
+}
+
+func truncate(s string, maxLen int) string {
+	if lipgloss.Width(s) <= maxLen {
+		return s
+	}
+	runes := []rune(s)
+	for i := len(runes) - 1; i > 0; i-- {
+		candidate := string(runes[:i]) + "…"
+		if lipgloss.Width(candidate) <= maxLen {
+			return candidate
+		}
+	}
+	return "…"
 }
 
 func saveConfig() error {
