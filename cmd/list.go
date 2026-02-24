@@ -8,10 +8,13 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
 	"github.com/rangoons/quick-branch/internal/generated"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -21,9 +24,9 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List Linear issues based on your saved filters",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		teamName := viper.GetString("list.team_name")
-		assigneeFilter := viper.GetString("list.assignee_filter")
-		fmt.Printf("Fetching %s issues for team \"%s\"...\n\n", assigneeFilter, teamName)
+		// teamName := viper.GetString("list.team_name")
+		// assigneeFilter := viper.GetString("list.assignee_filter")
+		// fmt.Printf("Fetching %s issues for team \"%s\"...\n\n", assigneeFilter, teamName)
 
 		resp, err := fetchIssues()
 		if err != nil {
@@ -34,10 +37,29 @@ var listCmd = &cobra.Command{
 			fmt.Println("No issues found.")
 			return nil
 		}
+		var (
+			header = lipgloss.Color("#957FB8")
+			border = lipgloss.Color("#54546D")
+			text   = lipgloss.Color("#DCD7BA")
+
+			headerStyle = lipgloss.NewStyle().Foreground(header).Bold(true).Align(lipgloss.Center)
+			cellStyle   = lipgloss.NewStyle().Padding(0, 1)
+			oddRowStyle = cellStyle.Foreground(text)
+		)
+		t := table.New().Border(lipgloss.NormalBorder()).BorderStyle(lipgloss.NewStyle().Foreground(border)).StyleFunc(func(row, col int) lipgloss.Style {
+			switch {
+			case row == table.HeaderRow:
+				return headerStyle
+			default:
+				return oddRowStyle
+			}
+		}).Headers("PRIORITY", "TICKET", "TITLE", "STATE")
 
 		for _, issue := range resp.Issues.Nodes {
-			fmt.Printf("(%g) [%s] %s  [%s]\n", issue.Priority, issue.Identifier, issue.Title, issue.State.Name)
+			t.Row(strconv.FormatFloat(issue.Priority, 'f', 0, 64), issue.Identifier, issue.Title, issue.State.Name)
+			// fmt.Printf("(%g) [%s] %s  [%s]\n", issue.Priority, issue.Identifier, issue.Title, issue.State.Name)
 		}
+		fmt.Println(t)
 		return nil
 	},
 }
